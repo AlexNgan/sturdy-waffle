@@ -7,6 +7,8 @@ import serial.tools.list_ports as ports
 from serial.tools.list_ports import comports 
 
 com_ports = list(ports.comports()) # create a list of com ['COM1','COM2']
+#Do somthing to this list to make it actually a list, bc comports() isnt???
+
 selected_port = ""  #Hold name of port that matches
 
 #Clears the shell.
@@ -14,25 +16,26 @@ def NewCase():
     subprocess.run("cls", shell=True, check=True)
 
 #Debug function in case the port auto-select fails.
-def ScanPorts(): 
-    sys.stderr.write('\n--- Available ports:\n')
-    for n in com_ports:
-        sys.stderr.write(com_ports[n], "\n")
-    #for n, (port, device, product), in enumerate(sorted(com_ports), 1):             
-      #  sys.stderr.write('--- {:2}: {:20} {}\n'.format(port, device, product))
+# def ScanPorts(): 
+#     sys.stderr.write('\n--- Available ports:\n')
+#     for i in com_ports:
+#         sys.stderr.write(com_ports[i], "\n")
+#     #for i, (port, device, product), in enumerate(sorted(com_ports), 1):             
+#       #  sys.stderr.write('--- {:2}: {:20} {}\n'.format(port, device, product))
 
-    port = input('--- Enter port index or full name: ')
-    try:
-        index = int(port) - 1
-        if not 0 <= index < len(com_ports):
-            sys.stderr.write('--- Invalid index!\n')        
-    except ValueError:
-        pass        
-    else:
-        port = com_ports[index]
+#     port = input('--- Enter port index or full name: ')
+#     try:
+#         index = int(port) - 1
+#         if not 0 <= index < len(com_ports):
+#             sys.stderr.write('--- Invalid index!\n')        
+#     except ValueError:
+#         pass        
+#     else:
+#         port = com_ports[index]
 
 #Function to autodetect and connect to first COM port that has FTDI as manufacturer.
 def AutoFind(manufacture_name):  
+    #Could also use com_ports.index(manufacturer_name) but this has clearer messages?
     for p in com_ports:
         if p.manufacturer is not None:
             #Casefold to ignore case for input vs. device info.
