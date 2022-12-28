@@ -1,51 +1,66 @@
 #Fluke hardware ID: FTDIBUS\COMPORT&VID_0403&PID_6001
 
-#Try to import pyserial modules.
+#FLUKE 2: PID (24577), VID (1027)
+
+import inspect
 import subprocess
 import sys
+import serial
 import serial.tools.list_ports as ports
 from serial.tools.list_ports import comports 
 
-com_ports = list(ports.comports()) # create a list of com ['COM1','COM2']
-#Do somthing to this list to make it actually a list, bc comports() isnt???
+com_ports = [str(i) for i in ports.comports()]# create a list of ['COM1','COM2'] as str
+PIDs = [i.pid for i in ports.comports()] #List of integers unless None
+VIDs = [i.vid for i in ports.comports()] 
+desc = [i.name for i in ports.comports()] 
 
-selected_port = ""  #Hold name of port that matches
+selected_port = ''  #To hold name of port that matches user input.
+
+try:
+    ser = serial.Serial(
+        port= selected_port,
+        baudrate=115200,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        xonxoff=True
+    )
+    ser.isOpen()
+except:
+    print("nothing in COM6")
+
 
 #Clears the shell.
 def NewCase():
     subprocess.run("cls", shell=True, check=True)
 
 #Debug function in case the port auto-select fails.
-# def ScanPorts(): 
-#     sys.stderr.write('\n--- Available ports:\n')
-#     for i in com_ports:
-#         sys.stderr.write(com_ports[i], "\n")
-#     #for i, (port, device, product), in enumerate(sorted(com_ports), 1):             
-#       #  sys.stderr.write('--- {:2}: {:20} {}\n'.format(port, device, product))
+def ScanPorts(): 
+    sys.stderr.write('\n--- Available ports:\n')
+    # for i in com_ports:
+    #     print(com_ports, "\n")
+    for i, (name, vid, pid) in enumerate(sorted(comports()), 1):             
+       sys.stderr.write('--- {:2}: {:20} {}\n'.format(name, vid, pid))
 
-#     port = input('--- Enter port index or full name: ')
-#     try:
-#         index = int(port) - 1
-#         if not 0 <= index < len(com_ports):
-#             sys.stderr.write('--- Invalid index!\n')        
-#     except ValueError:
-#         pass        
-#     else:
-#         port = com_ports[index]
+    selected_port = input('--- Enter port index or full name: ')
+    try:
+        index = int(selected_port) - 1 #THIS WILL NOT WORK, FIX TOMORROW...SELECTED PORT IS A LITERAL AND I NEED TO MAKE THE USER INPUT PART MAP COM PORT NAMES TO OPTIONS 1, 2, 3, ETC.
+        if not 0 <= index < len(com_ports):
+            sys.stderr.write('--- Invalid index!\n')        
+    except ValueError:
+        pass        
+    else:
+        selected_port = com_ports[index]
 
 #Function to autodetect and connect to first COM port that has FTDI as manufacturer.
-def AutoFind(manufacture_name):  
-    #Could also use com_ports.index(manufacturer_name) but this has clearer messages?
-    for p in com_ports:
-        if p.manufacturer is not None:
-            #Casefold to ignore case for input vs. device info.
-            if p.manufacturer.casefold() == manufacture_name.casefold():
-                print(manufacture_name,"connected.\n")
+def AutoFind():  
+    for i in range(len(com_ports)): 
+        if VIDs[i] is not None:
+            if (VIDs[i] == 1027) & (PIDs[i] == 24577):
+                print("Fluke Pro Sim 8 found.\n")
                 break
-            elif(p == com_ports[(len(com_ports)-1)]):   #When at end of list of COM ports.
-                print("No", manufacture_name, "Device Found.\n")
-            else:
-                continue
+        elif(i == [len(VIDs)-1 or len(PIDs)-1]):   #When at end of list of COM ports.
+            print("No Device Found.\n")
         else:
             continue
 
@@ -54,5 +69,5 @@ def AutoFind(manufacture_name):
 #def GenerateReport(): 
     #with open('output' + VARIABLE + '.txt', 'w') as f:
         #out = subprocess.run('ping 127.0.0.1', shell=True, stdout=f, text=True)
-ScanPorts()
-#AutoFind("FTDI")
+NewCase()
+AutoFind()
