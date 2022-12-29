@@ -1,5 +1,9 @@
 #Fluke hardware ID: FTDIBUS\COMPORT&VID_0403&PID_6001
 
+# Some commands are designed to pass from the ProSim 8 directly to the plugged in SpO2 or other 
+# Auxiliary device. These commands are prefixed with @. Then the command, with the @ removed is 
+# passed through to the Auxiliary port.
+
 #FLUKE 2: PID (24577), VID (1027)
 
 import inspect
@@ -12,7 +16,6 @@ from serial.tools.list_ports import comports
 com_ports = [str(i) for i in ports.comports()]# create a list of ['COM1','COM2'] as str
 PIDs = [i.pid for i in ports.comports()] #List of product IDs (integers unless 'None')
 VIDs = [i.vid for i in ports.comports()] #List of vendor IDs (integers unless 'None')
-desc = [i.name for i in ports.comports()] 
 
 selected_port = 'COM6'  #Literal to hold name of port that matches user input.
 ser = serial.Serial(
@@ -28,23 +31,6 @@ ser = serial.Serial(
 
 def NewCase():
     subprocess.run("cls", shell=True, check=True) #Clears the shell.
-    #try:
-    #     ser = serial.Serial(
-    #         port=selected_port,
-    #         baudrate=115200,
-    #         parity=serial.PARITY_NONE,
-    #         stopbits=serial.STOPBITS_ONE,
-    #         bytesize=serial.EIGHTBITS,
-    #         xonxoff=True,
-    #         timeout=0.5,
-    #         write_timeout=0.5
-    # )
-
-    #     #Checks to see if another program is using this device, kicks it off if so.
-    #     ser.close()
-    #     ser.open()    
-    #except:
-        #print("nothing in COM6")
 
 #Debug function in case the port auto-select fails.
 def ScanPorts(): 
@@ -64,11 +50,12 @@ def ScanPorts():
     else:
         selected_port = com_ports[index]
 
-#Function to autodetect and connect to first COM port that has FTDI as manufacturer.
+#Function to autodetect and connect to first COM port that matches the ProSim 8
 def AutoFind():  
     for i in range(len(com_ports)): 
         if VIDs[i] is not None:
             if (VIDs[i] == 1027) & (PIDs[i] == 24577):
+                selected_port = ports.comports()[i]
                 print("Fluke Pro Sim 8 found at:",selected_port, "\n")
                 break
         elif(i == [len(VIDs)-1 or len(PIDs)-1]):   #When at end of list of COM ports.
@@ -76,18 +63,8 @@ def AutoFind():
         else:
             continue
 
-def Connect():
-    try:
-        ser = serial.Serial(
-            port=selected_port,
-            baudrate=115200,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            xonxoff=True,
-            timeout=0.5,
-            write_timeout=0.5
-        )
-        ser.open()
-    except:
-        print("nothing in COM6")
+NewCase()
+AutoFind()
+print("Open:", ser.isOpen())
+ser.write('IDENT'.encode())
+#print("reply:", (ser.read()).decode())
