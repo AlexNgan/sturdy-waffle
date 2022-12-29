@@ -10,29 +10,41 @@ import serial.tools.list_ports as ports
 from serial.tools.list_ports import comports 
 
 com_ports = [str(i) for i in ports.comports()]# create a list of ['COM1','COM2'] as str
-PIDs = [i.pid for i in ports.comports()] #List of integers unless None
-VIDs = [i.vid for i in ports.comports()] 
+PIDs = [i.pid for i in ports.comports()] #List of product IDs (integers unless 'None')
+VIDs = [i.vid for i in ports.comports()] #List of vendor IDs (integers unless 'None')
 desc = [i.name for i in ports.comports()] 
 
-selected_port = ''  #To hold name of port that matches user input.
+selected_port = 'COM6'  #Literal to hold name of port that matches user input.
+ser = serial.Serial(
+    port=selected_port,
+    baudrate=115200,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,
+    xonxoff=True,
+    timeout=0.5,
+    write_timeout=0.5
+)
 
-try:
-    ser = serial.Serial(
-        port= selected_port,
-        baudrate=115200,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS,
-        xonxoff=True
-    )
-    ser.isOpen()
-except:
-    print("nothing in COM6")
-
-
-#Clears the shell.
 def NewCase():
-    subprocess.run("cls", shell=True, check=True)
+    subprocess.run("cls", shell=True, check=True) #Clears the shell.
+    #try:
+    #     ser = serial.Serial(
+    #         port=selected_port,
+    #         baudrate=115200,
+    #         parity=serial.PARITY_NONE,
+    #         stopbits=serial.STOPBITS_ONE,
+    #         bytesize=serial.EIGHTBITS,
+    #         xonxoff=True,
+    #         timeout=0.5,
+    #         write_timeout=0.5
+    # )
+
+    #     #Checks to see if another program is using this device, kicks it off if so.
+    #     ser.close()
+    #     ser.open()    
+    #except:
+        #print("nothing in COM6")
 
 #Debug function in case the port auto-select fails.
 def ScanPorts(): 
@@ -57,17 +69,25 @@ def AutoFind():
     for i in range(len(com_ports)): 
         if VIDs[i] is not None:
             if (VIDs[i] == 1027) & (PIDs[i] == 24577):
-                print("Fluke Pro Sim 8 found.\n")
+                print("Fluke Pro Sim 8 found at:",selected_port, "\n")
                 break
         elif(i == [len(VIDs)-1 or len(PIDs)-1]):   #When at end of list of COM ports.
             print("No Device Found.\n")
         else:
             continue
 
-#Creates output txt file, need to write in code 
-#to capture user input for participant number
-#def GenerateReport(): 
-    #with open('output' + VARIABLE + '.txt', 'w') as f:
-        #out = subprocess.run('ping 127.0.0.1', shell=True, stdout=f, text=True)
-NewCase()
-AutoFind()
+def Connect():
+    try:
+        ser = serial.Serial(
+            port=selected_port,
+            baudrate=115200,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            xonxoff=True,
+            timeout=0.5,
+            write_timeout=0.5
+        )
+        ser.open()
+    except:
+        print("nothing in COM6")

@@ -3,7 +3,8 @@ import subprocess
 import sys
 import serial
 import serial.tools.list_ports as ports
-from serial.tools.list_ports import comports 
+from serial.tools.list_ports import comports
+import time
 
 #Creates output txt file, need to write in code to capture user input for participant number
 def GenerateReport(): 
