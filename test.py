@@ -91,11 +91,10 @@ def OpenSesame():
 #     pass
 
 NewCase()
-AutoFind()
 print("Target:", AutoFind())
 print("Serial ports:", com_ports)
 #OpenSesame()
-ser.open()
-print(ser)
-ser.write(b'IDENT\r')
-print("reply:", (ser.read()).decode())
+ser.open() #need to check if target exists, then try this
+#print(ser)
+print(ser.write(b"SN"))
+print("reply:", (ser.readline()).decode())
