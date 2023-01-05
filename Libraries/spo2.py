@@ -5,9 +5,9 @@ import re
 
 import numpy as np
 
-from prosim8.misc.spo2_enum import AMBF, SPO2TYPE
+from misc.spo2_enum import AMBF, SPO2TYPE
 
-
+#WHAT DEFAULT?
 class SPO2(object):
     defaults = {
         'saturation': 50,
@@ -16,7 +16,7 @@ class SPO2(object):
         'ambs': 2.0,
         'ambf': 4,
         'size': 5,
-        'type': 'NELCR',
+        'type': 'MASIM',
         'index': 10,
         'qur_index': 10,
         'ratio': 20000,
@@ -55,7 +55,6 @@ class SPO2(object):
     '''
     def set_spo2_sat(self, saturation):
         self.values['saturation'] = saturation
-
 
     '''
         Type: Class Variable

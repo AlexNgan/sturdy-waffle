@@ -1,20 +1,19 @@
 """
-This module provides serial connections to devices, such as a Impulse Device.
+This module provides serial connections to devices.
 """
 
 import time
 import re
 import serial
 
-
-# from prosim8.custom_exceptions import EmptyCommandError
-from prosim8.custom_exceptions import UnknownCommandError
-from prosim8.custom_exceptions import IllegalCommandError
-from prosim8.custom_exceptions import InvalidParameterError
-from prosim8.custom_exceptions import BufferOverflowError
-from prosim8.custom_exceptions import DeviceMemoryError
-from prosim8.custom_exceptions import NotInstalledError
-from prosim8.custom_exceptions import CantZeroPressureError
+# from custom_exceptions import EmptyCommandError
+from custom_exceptions import UnknownCommandError
+from custom_exceptions import IllegalCommandError
+from custom_exceptions import InvalidParameterError
+from custom_exceptions import BufferOverflowError
+from custom_exceptions import DeviceMemoryError
+from custom_exceptions import NotInstalledError
+from custom_exceptions import CantZeroPressureError
 
 
 class Connection(object):
@@ -34,7 +33,7 @@ class Connection(object):
         dsrdtr(bool): Enable hardware (DSR/DTR) flow control
     """
 
-    #GoodCommand           = {'name' : 'OK'                   , 'search' : r'^\*$'},
+    #GoodCommand = {'name' : 'OK', 'search' : r'^\*$'},
     RESPONSES = [
         {'Exception' : UnknownCommandError   , 'name' : 'Empty Command'        , 'search' : r'^!$'},
         {'Exception' : IllegalCommandError   , 'name' : 'Unknown Command'      , 'search' : r'^!01 Unknown command$'},
