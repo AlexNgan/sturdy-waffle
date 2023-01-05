@@ -10,15 +10,9 @@ import sys
 import serial
 import serial.tools.list_ports as ports
 from serial.tools.list_ports import comports 
-from Libraries.prosim import PROSIM
+import prosim8
+from prosim8.prosim import PROSIM
 import time
-
-#Tool to check if this directory is on path and append if needed
-def PATHcheck(directory):
-    sys.path.append(directory)
-
-    for line in sys.path:
-        print(line)
 
 PROSIM = serial.Serial(
             baudrate=115200,
@@ -31,9 +25,6 @@ PROSIM = serial.Serial(
             timeout=0.5,
             write_timeout=0.5
         )
-
-
-PROSIM.values = SPO2.defaults.copy()
 
 com_ports = [i.device for i in ports.comports()]
 #com_ports = [str(i) for i in ports.comports()]# create a list of ['COM1','COM2'] as str
@@ -111,5 +102,4 @@ print("Serial ports:", com_ports)
 PROSIM.open() #need to check if target exists, then try this
 #print(PROSIM)
 #print(PROSIM.write(b"SN"))
-sat(PROSIM)
 print("reply:", (PROSIM.readline()).decode())

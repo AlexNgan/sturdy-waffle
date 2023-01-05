@@ -6,14 +6,14 @@ import time
 import re
 import serial
 
-# from custom_exceptions import EmptyCommandError
-from custom_exceptions import UnknownCommandError
-from custom_exceptions import IllegalCommandError
-from custom_exceptions import InvalidParameterError
-from custom_exceptions import BufferOverflowError
-from custom_exceptions import DeviceMemoryError
-from custom_exceptions import NotInstalledError
-from custom_exceptions import CantZeroPressureError
+# from .custom_exceptions import EmptyCommandError
+from .custom_exceptions import UnknownCommandError
+from .custom_exceptions import IllegalCommandError
+from .custom_exceptions import InvalidParameterError
+from .custom_exceptions import BufferOverflowError
+from .custom_exceptions import DeviceMemoryError
+from .custom_exceptions import NotInstalledError
+from .custom_exceptions import CantZeroPressureError
 
 
 class Connection(object):

@@ -5,7 +5,7 @@ import re
 
 import numpy as np
 
-from misc.spo2_enum import AMBF, SPO2TYPE
+from .misc.spo2_enum import AMBF, SPO2TYPE
 
 #WHAT DEFAULT?
 class SPO2(object):

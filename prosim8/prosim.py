@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-from connection import Connection
-from ecg import ECG
+from .connection import Connection
+from .ecg import ECG
 #from ibp import IBP
 #from nibp import NIBP
-from spo2 import SPO2
+from .spo2 import SPO2
 #from temp import TEMP
-
 
 class PROSIM(object):
 
