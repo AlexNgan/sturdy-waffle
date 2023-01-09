@@ -7,6 +7,9 @@ import serial
 import serial.tools.list_ports as ports
 from serial.tools.list_ports import comports
 from prosim8.prosim import PROSIM
+import tkinter as tk
+from tkinter.ttk import *
+from tkinter import *
 
 '''
 **********  These are tools/functions to debug, if necessary.  **********
@@ -22,6 +25,7 @@ def PATHcheck(directory):
 def NewCase():
     subprocess.run("cls", shell=True, check=True) 
 
+
 '''
 **********  "Actual" code lives below this.  **********
 '''
@@ -36,18 +40,27 @@ def AutoFind():
     for i in range(len(com_ports)): 
         if VIDs[i] is not None:
             if (VIDs[i] == 1027) & (PIDs[i] == 24577):
-                 #Sets the 'target' port as the one associated with these matching IDs
                 #PROSIM.port = com_ports[i]
                 print("Fluke Pro Sim 8 found at:", com_ports[i], "\n")
                 # change com port when connected
                 return com_ports[i]
-                ProSim = PROSIM(com_port=PROSIM.port, debug=True)
-                return ProSim
         else:
             print("No Device Found. Please confirm that the simulator is plugged into this computer.\n")
             continue
 
+def MakeUI(self):
+    window = Application()
+    window.label()
+    window.quit = tk.Button(
+        text="QUIT", fg="red",
+        command=self.master.destroy
+        )
+    gui.button("Task(s) 1-3", "green", )
+    #Application.manual_entry("SpO2")
+
 NewCase()
+AutoFind()
 ProSim = PROSIM(AutoFind(), debug=True)
 ProSim.spo2.set_spo2_sat(69) 
 ProSim.spo2.sat()
+ProSim.ecg.ecgrun() # turn on ECG 

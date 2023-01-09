@@ -104,6 +104,7 @@ class Connection(object):
                                   rtscts=rtscts,
                                   dsrdtr=dsrdtr)
         self.DEBUG = debug
+        
     @property
     def current_input_size(self):
         """
