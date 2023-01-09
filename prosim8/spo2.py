@@ -5,12 +5,12 @@ import re
 
 import numpy as np
 
-from misc.spo2_enum import AMBF, SPO2TYPE
+from .misc.spo2_enum import AMBF, SPO2TYPE
 
-#WHAT DEFAULT?
+#These default values are what the patient is at the start of the protocol.
 class SPO2(object):
     defaults = {
-        'saturation': 50,
+        'saturation': 88,
         'perfusion': '10.0',
         'ppm': 100.00,
         'ambs': 2.0,
@@ -182,7 +182,6 @@ class SPO2(object):
        Type: Command
        Method to set saturation percentage
     '''
-
     def sat(self):
         sat = self.values['saturation']
 
@@ -200,7 +199,6 @@ class SPO2(object):
         Type: Command
         Method to set pulse amplitude in percent
     '''
-
     def perf(self):
         perf = self.values['perfusion']
 
@@ -216,7 +214,6 @@ class SPO2(object):
         Type: Command
         Method to set transmission in PPM
     '''
-
     def trans(self):
         trans = self.values['ppm']
 
@@ -239,7 +236,6 @@ class SPO2(object):
         Type: Command
         Methods to the ambient mode
     '''
-
     def ambm(self, on='ON'):
         on = str(on)
         return self.device.send('AMBM=%s' % on)
@@ -248,7 +244,6 @@ class SPO2(object):
         Type: Command
         Methods to the ambient size, indicated by relative amplitude
     '''
-
     def ambs(self):
         size = self.values['ambs']
 
@@ -262,7 +257,6 @@ class SPO2(object):
         Type: Command
         Methods to set the ambient frequency
     '''
-
     def ambf(self):
         size = self.values['ambf']
 
@@ -300,7 +294,6 @@ class SPO2(object):
         Type: Command
         Methods to set the respiration mode
     '''
-
     def respm(self, on='ON'):
         on = bool(on)
         return self.device.send('RESPM=%s' % on)
@@ -309,7 +302,6 @@ class SPO2(object):
         Type: Command
         Methods to set the respiration size
     '''
-
     def resps(self):
         size = self.values['size']
 
@@ -366,9 +358,17 @@ class SPO2(object):
 
     '''
         Type: Command
+        Method to automatically adjust SpO2 in relation to FiO2 change
+    '''
+    def FiO2_adjust(self,fio2):
+        oxygen = 85 + (100-85)/(100-21)*(fio2-21) #Where minSpO2 and maxSpO2 is the range of SpO2s you want to simulate and FIO2 is in %.
+        self.spo2.set_spo2_sat(oxygen) 
+        self.spo2.sat()            
+        
+    '''
+        Type: Command
         Method to query the name of the user loaded
     '''
-
     def send_qurcurve(self):
         index = self.values['qur_index']
 
@@ -383,7 +383,6 @@ class SPO2(object):
         Type: Command
         Deletes all user loaded R-Curves.
     '''
-
     def rcurvedelall(self):
         return self.device.send('RCURVEDELALL')
 
@@ -392,7 +391,6 @@ class SPO2(object):
         Type: Command
         Queries the currently selected SpO2 Type
     '''
-
     def qspo2type(self):
         return self.device.send('QSPO2TYPE')
 
@@ -400,7 +398,6 @@ class SPO2(object):
         Type: Command
         Queries the number of user R-Curves loaded
     '''
-
     def qurcurves(self):
         return self.device.send('QURCURVES')
 
@@ -408,7 +405,6 @@ class SPO2(object):
         Type: Command
         Queries the number of user R-Curves loaded
     '''
-
     def qurcurve(self):
         return self.device.send('QURCURVE')
 
@@ -416,7 +412,6 @@ class SPO2(object):
         Type: Command
         Queries the number of user R-Curves loaded
     '''
-
     def spo2ident(self):
         return self.device.send('SPO2IDENT')
 
@@ -424,7 +419,6 @@ class SPO2(object):
         Type: Command
         SpO2 status information.
     '''
-
     def qstat(self):
         return self.device.send('QSTAT')
 
@@ -432,7 +426,6 @@ class SPO2(object):
         Type: Command
         set the saturation percentage and R-curve
     '''
-
     def ratio(self):
         ratio = self.values['ratio']
 
@@ -452,7 +445,6 @@ class SPO2(object):
         Type: Command
         Run the self test for Sp02
     '''
-
     def spo2slftst(self):
         return self.device.send('SPO2SLFTST')
 

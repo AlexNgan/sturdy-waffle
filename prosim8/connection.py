@@ -6,7 +6,8 @@ import time
 import re
 import serial
 
-# from ..custom_exceptions import EmptyCommandError
+#These NEED to have the . relative import if running from the main script. Running this file alone will yield errors that ask for the . removed. I don't know why.
+from .custom_exceptions import EmptyCommandError
 from .custom_exceptions import UnknownCommandError
 from .custom_exceptions import IllegalCommandError
 from .custom_exceptions import InvalidParameterError

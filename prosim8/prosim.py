@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
-from connection import Connection
+from .connection import Connection
 from .ecg import ECG
-#from ibp import IBP
-#from nibp import NIBP
-from spo2 import SPO2
-#from temp import TEMP
+from .spo2 import SPO2
 
 class PROSIM(object):
     def __init__(self, com_port, debug=False):

@@ -7,30 +7,40 @@ Some commands are designed to pass from the ProSim 8 directly to the plugged in 
 import inspect
 import subprocess
 import sys
-import serial
-import serial.tools.list_ports as ports
-from serial.tools.list_ports import comports 
-#import prosim8
-from prosim8.prosim import PROSIM
 import time
 
+import serial
+import serial.tools.list_ports as ports
+from serial.tools.list_ports import comports
+
+import prosim8
+from prosim8 import prosim as PROSIM
+
 PROSIM = serial.Serial(
-            baudrate=115200,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            xonxoff=False,
-            rtscts=True, 
-            dsrdtr=True,
-            timeout=0.5,
-            write_timeout=0.5
+        baudrate=115200,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        xonxoff=False,
+        rtscts=True, 
+        dsrdtr=True,
+        timeout=0.5,
+        write_timeout=0.5
         )
 
-ProSim = PROSIM
+com_ports = [i.device for i in ports.comports()]
+#com_ports = [str(i) for i in ports.comports()]# create a list of ['COM1','COM2'] as str
+PIDs = [i.pid for i in ports.comports()] #List of product IDs (integers unless 'None')
+VIDs = [i.vid for i in ports.comports()] #List of vendor IDs (integers unless 'None')
 
 def NewCase():
     subprocess.run("cls", shell=True, check=True) #Clears the shell.
 
+#See which modules are able to be imported.
+def GetModules():
+    results = [m.__name__ for m in sys.modules.values() if m]
+    results = sorted(results)
+    print(results)
 
 #Debug function in case the port auto-select fails.
 def ScanPorts(): 
@@ -75,12 +85,7 @@ def OpenSesame():
 # except:
 #     pass
 
-def sat(self):
-    ProSim.spo2.set_spo2_sat(94) # sets SpO2 to 94%
-    ProSim.spo2.sat()            # sets SpO2 to 94%
-
 NewCase()
-print("Target:", AutoFind())
 print("Serial ports:", com_ports)
 #OpenSesame()
 PROSIM.open() #need to check if target exists, then try this
