@@ -2,9 +2,10 @@
 import re
 
 import numpy as np
-
-from .misc.ecg_enum import ECGEART, ECGEARTLD, CHAMBER, GRANULARITY
-from .misc.ecgwaves_enum import ECGSPVWAVE, ECGPREWAVE, ECGVNTWAVE, ECGCNDWAVE, ECGTVPWAVE, ECGACLSWAVE
+import misc.ecg_enum
+import misc.ecgwaves_enum
+#from .misc.ecg_enum import ECGEART, ECGEARTLD, CHAMBER, GRANULARITY
+#from .misc.ecgwaves_enum import ECGSPVWAVE, ECGPREWAVE, ECGVNTWAVE, ECGCNDWAVE, ECGTVPWAVE, ECGACLSWAVE
 
 from .misc.ecg_enum import ECGNSRAX
 
