@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-from .connection import Connection
+from connection import Connection
 from .ecg import ECG
 #from ibp import IBP
 #from nibp import NIBP
-from .spo2 import SPO2
+from spo2 import SPO2
 #from temp import TEMP
 
 class PROSIM(object):
-
     def __init__(self, com_port, debug=False):
-        #   self.device = Connection(device_id='/dev/ttyUSB0', timeout=1.0, write_timeout=1.0)
-        #   self.device = Connection(device_id='/dev/ttyS3', timeout=1.0, write_timeout=1.0)
         self.device = Connection(device_id=com_port, timeout=1.0, write_timeout=1.0, debug=debug)
         self.device.send('QMODE')
         self.device.send('QUI')

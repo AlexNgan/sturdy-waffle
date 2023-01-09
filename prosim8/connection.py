@@ -6,7 +6,7 @@ import time
 import re
 import serial
 
-# from .custom_exceptions import EmptyCommandError
+# from ..custom_exceptions import EmptyCommandError
 from .custom_exceptions import UnknownCommandError
 from .custom_exceptions import IllegalCommandError
 from .custom_exceptions import InvalidParameterError
@@ -45,6 +45,7 @@ class Connection(object):
         {'Exception' : NotInstalledError     , 'name' : 'Communication Failure', 'search' : r'^!27 Aux/SpO2 Communication Error$'},
     ]
 
+#Pass the info from PROSIM in test.py?
     def __init__(self,
                  device_id=0,
                  baudrate=115200,

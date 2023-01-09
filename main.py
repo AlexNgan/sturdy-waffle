@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 #The main code will live here, functions will be mapped to keys
-import prosim8 
-import serial
-import serial.tools.list_ports as ports
-from serial.tools.list_ports import comports 
 import subprocess
 import sys
+import serial
+import serial.tools.list_ports as ports
+from serial.tools.list_ports import comports
 
 '''
 **********  These are tools/functions to debug, if necessary.  **********
@@ -48,4 +47,25 @@ PROSIM = serial.Serial(
             write_timeout=0.5
         )
 
-GetModules()
+#Function to autodetect and connect to first COM port that matches the ProSim 8
+def AutoFind():  
+    for i in range(len(com_ports)): 
+        if VIDs[i] is not None:
+            if (VIDs[i] == 1027) & (PIDs[i] == 24577):
+                 #Sets the 'target' port as the one associated with these matching IDs
+                PROSIM.port = com_ports[i]
+                print("Fluke Pro Sim 8 found at:",PROSIM.port, "\n")
+                return PROSIM.port
+        elif(i == [len(VIDs)-1 or len(PIDs)-1]):   #When at end of list of COM ports.
+            print("No Device Found.\n")
+        else:
+            continue
+
+
+PATHcheck("/Users/Alex.Ngan/OneDrive - Zoll Medical Corporation (1)/Documents/sturdy-waffle/")
+NewCase()
+print("Target:", AutoFind())
+print("Serial ports:", com_ports)
+PROSIM.open() #need to check if target exists, then try this
+print(PROSIM.write(b"SN"))
+#print("reply:", (PROSIM.readline()).decode())
