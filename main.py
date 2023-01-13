@@ -135,12 +135,18 @@ window.rowconfigure(index=7, weight=0)
 
 
 #Import the theme tcl file
-window.tk.call('source', 'C:/Users/Alex.Ngan/OneDrive - Zoll Medical Corporation (1)/Documents/sturdy-waffle/forest-light.tcl')
+try:
+    window.tk.call('source', 'C:/Users/Alex.Ngan/OneDrive - Zoll Medical Corporation (1)/Documents/sturdy-waffle/forest-light.tcl')
+except:
+    print("Whoops.")
 window.geometry("500x500")
 window.title("Fluke ProSim 8 Control Interface")
 
 style = ttk.Style()
-ttk.Style(window).theme_use('forest-light')
+try:
+    ttk.Style(window).theme_use('forest-light')
+except:
+    print("No style file found.")
 style.configure("TLabel", justify="center")
 
 def getUserInput(title="Enter value",prompt="Your answer:"):
