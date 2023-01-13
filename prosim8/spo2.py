@@ -361,9 +361,10 @@ class SPO2(object):
         Method to automatically adjust SpO2 in relation to FiO2 change
     '''
     def FiO2_adjust(self,fio2):
-        oxygen = 85 + (100-85)/(100-21)*(fio2-21) #Where minSpO2 and maxSpO2 is the range of SpO2s you want to simulate and FIO2 is in %.
-        self.spo2.set_spo2_sat(oxygen) 
-        self.spo2.sat()            
+        oxygen = int(85 + (100-85)/(100-21)*(fio2-21)) #Where minSpO2 and maxSpO2 is the range of SpO2s you want to simulate and FIO2 is in %.
+        #self.spo2.set_spo2_sat(oxygen) 
+        return oxygen
+            
         
     '''
         Type: Command

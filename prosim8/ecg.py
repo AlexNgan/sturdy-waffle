@@ -39,7 +39,7 @@ class ECG(object):
         'vfib2_granularity': 'FINE',
         'monovtach_rate': 150,
         'polyvtach_rate': 3,
-        'pulse_rate': 60,
+        'pulse_rate': 72,
         'square_freq': 2.0,
         'sine_freq': 5,
         'tri_freq': 2.0,
