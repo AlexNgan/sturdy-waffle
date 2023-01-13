@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tkinter as tk
 import tkinter.simpledialog as dialog
+from datetime import datetime
 from tkinter import ttk
 
 import numpy as np
@@ -32,12 +33,7 @@ def NewCase():
 def echoLocate(widget):
     x = str(widget.grid_info()["column"])
     y = str(widget.grid_info()["row"])
-    print(widget, "at: (" + x + "," + y + ")\n")
-
-#NO WORKY
-def who_r_u(widget):
-    print("widget name:", str(widget.cget("name")))
-    #print("widget name:", widget["name"])
+    print(widget, "at: (" + x + "," + y + ")/n")
 
 '''
 ######################################### Code for Sim #########################################
@@ -61,11 +57,30 @@ def AutoFind():
     for i in range(len(com_ports)): 
         if VIDs[i] is not None:
             if (VIDs[i] == 1027) & (PIDs[i] == 24577):
-                print("Fluke Pro Sim 8 found at:", com_ports[i], "\n")
+                print("Fluke Pro Sim 8 found at:", com_ports[i], "/n")
                 return com_ports[i]
         else:
-            print("No Device Found. Please confirm that the simulator is plugged into this computer.\n")
+            print("No Device Found. Please confirm that the simulator is plugged into this computer./n")
             continue 
+
+def UpdateVitals():
+    global params
+    hr_label = ttk.Label(window, name="hr",text=("HR:",params[0,1]))
+    sp_label = ttk.Label(window, name="spo2",text=("SpO2:",params[1,1]))
+    rr_label = ttk.Label(window, name="rr",text=("RR:",params[2,1]))
+
+    hr_label.grid(row=3,column=3)
+    sp_label.grid(row=4,column=3)
+    rr_label.grid(row=5,column=3)
+
+def ChangeVitals(hr=72,sp=94,rr=15):
+    global params
+    params[0,1] = hr
+    params[1,1] = sp
+    params[2,1] = rr
+    UpdateVitals()
+    print(params)
+    return params
 
 def initial():
     hr_value = 72
@@ -80,115 +95,73 @@ def desat():
     spo2_value = 85
     ProSim.spo2.set_spo2_sat(spo2_value)
     ProSim.spo2.sat()
-
-    updateVitals(sp=spo2_value)
+    ChangeVitals(sp=spo2_value)
 
 def changeFiO2():
     fio2 = int(getUserInput("Enter FiO2 value", "FiO2 value needs to be between 21% to 100%"))
     spo2_value = ProSim.spo2.FiO2_adjust(fio2)
     ProSim.spo2.set_spo2_sat(spo2_value)
     ProSim.spo2.sat()
-
-    updateVitals(sp=spo2_value)
+    ChangeVitals(sp=spo2_value)
 
 def stabilization():
     spo2_value = 91
     ProSim.spo2.set_spo2_sat(spo2_value)
     ProSim.spo2.sat()
-
-    updateVitals(sp=spo2_value)
+    ChangeVitals(sp=spo2_value)
 
 '''
 ######################################### Code for GUI #########################################
 -----------------------------------------------------------------------------------------------
 '''  
 window = tk.Tk()
-window.option_add("*tearOff", False) # This is always a good idea
+#window.option_add("*tearOff", False) # This is always a good idea
 
 # Make the app responsive
-window.columnconfigure(index=0, weight=1)
+window.columnconfigure(index=0, weight=1, minsize=10)
 window.columnconfigure(index=1, weight=1)
 window.columnconfigure(index=2, weight=1)
-window.rowconfigure(index=0, weight=1)
-window.rowconfigure(index=1, weight=1)
-window.rowconfigure(index=2, weight=1)
+window.columnconfigure(index=3, weight=1)
+window.columnconfigure(index=4, weight=1)
+window.columnconfigure(index=5, weight=1)
+window.columnconfigure(index=7, weight=1, minsize=10)
+window.rowconfigure(index=0, weight=0, minsize=30)
+window.rowconfigure(index=1, weight=0)
+window.rowconfigure(index=2, weight=0, minsize=30)
+window.rowconfigure(index=3, weight=0)
+window.rowconfigure(index=4, weight=0)
+window.rowconfigure(index=6, weight=0, minsize=30)
+window.rowconfigure(index=7, weight=0)
 
-# Import the theme tcl file
-window.tk.call('source', 'forest-light.tcl')
-window.geometry("500x300")
+
+#Import the theme tcl file
+window.tk.call('source', 'C:/Users/Alex.Ngan/OneDrive - Zoll Medical Corporation (1)/Documents/sturdy-waffle/forest-light.tcl')
+window.geometry("500x500")
 window.title("Fluke ProSim 8 Control Interface")
 
 style = ttk.Style()
 ttk.Style(window).theme_use('forest-light')
-
-style.configure("TLabel", font=[('comic sans', 25)])
-
-label1 = ttk.Label(window, name="heading", text="This will control stuff. Current simulated values:")
-
-#Iterates through rows so that automatic element placement doesn't overlap anything.
-openRow = 0
-openColumn = 0  
+style.configure("TLabel", justify="center")
 
 def getUserInput(title="Enter value",prompt="Your answer:"):
     input = dialog.askstring(title,prompt)
     return input
 
-def getRow():
-    global openRow
-    openRow = openRow+1
-    return openRow
-
-def getColumn():
-    global openColumn
-    openColumn = openColumn+1
-    return openColumn
-
-#Function to arrange elements in grid w default values.
-def place(element, row=0, column=0, pad=5):
-    element.grid(row=row, column=column, pady=pad)
-
-#Makes the parameters and their values line up.
-def initiateVitals():
-    global params
-    for row in range(params.shape[0]):
-        for col in range(params.shape[1]):
-            label = ttk.Label(name=params[row,0].shape,text=params[row,col], justify="left")
-            label.grid(row=openRow+1,column=0,ipadx=5,ipady=50) #THIS GETS ME THE ALIGNMENT I WANT, BUILD THIS INTO PLACE FUNCTION
-            #place(label, openRow+1, 0)
-        place(label, getRow(), col)
-
-
-#NEED TO WRITE A NEW INITITE VITALS THAT ACTUALLY ASSIGNS VALUES TO PRESET LABELS. Can use that old function to assign grid tho?
-def updateVitals(hr="72",sp="94",rr="15"):
-    global params
-    params[0,1] = hr
-    params[1,1] = sp
-    params[2,1] = rr 
-    print(params)
-    return params
-
 NewCase()
+UpdateVitals()
 ProSim = PROSIM(AutoFind(), debug=True)
 
-initiateVitals()
-
-label1.grid(row=0,column=0,columnspan=3)
+heading = ttk.Label(window, name="heading", text="This program controls a Fluke ProSim8 Vitals Simulator. \nCurrent simulated values:")
+heading.grid(row=1,column=0,columnspan=6)
 
 btn0 = ttk.Button(window, name="start button", text="START", style='Accent.TButton', command=lambda:initial())
 btn1 = ttk.Button(window, name="desat button", text="Desat event", command=lambda:desat())
 btn2 = ttk.Button(window, name="adjust FiO2 button",text="Change FiO2", command=lambda:changeFiO2())
 btn3 = ttk.Button(window, name="stabilize button",text="Patient stable", command=lambda:stabilization())
 
-btn0.grid(row=getRow(), column=0)
-btn_row = (btn0.grid_info())["row"]        #Allows placement of other buttons on the same row
-
-btn1.grid(row=btn_row, column=1)
-btn2.grid(row=btn_row, column=2)
-btn3.grid(row=btn_row, column=3, in_=window)
-
-one = ttk.Label(name="tester1",text="test1")
-one.grid(row=0, column=0)
-two = ttk.Label(name="tester2",text="test2")
-two.grid(row=6, column=6)
+btn0.grid(row=7, column=1)
+btn1.grid(row=7, column=2)
+btn2.grid(row=7, column=4)
+btn3.grid(row=7, column=5)
 
 window.mainloop()

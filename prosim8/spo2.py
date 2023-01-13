@@ -5,7 +5,7 @@ import re
 
 import numpy as np
 
-from .misc.spo2_enum import AMBF, SPO2TYPE
+from prosim8.misc.spo2_enum import AMBF, SPO2TYPE
 
 #These default values are what the patient is at the start of the protocol.
 class SPO2(object):

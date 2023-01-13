@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-from .connection import Connection
-from .ecg import ECG
-from .spo2 import SPO2
+from prosim8.connection import Connection
+from prosim8.ecg import ECG
+from prosim8.spo2 import SPO2
+
 
 class PROSIM(object):
     def __init__(self, com_port, debug=False):

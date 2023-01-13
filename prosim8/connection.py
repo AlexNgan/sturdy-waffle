@@ -7,14 +7,14 @@ import re
 import serial
 
 #These NEED to have the . relative import if running from the main script. Running this file alone will yield errors that ask for the . removed. I don't know why.
-from .custom_exceptions import EmptyCommandError
-from .custom_exceptions import UnknownCommandError
-from .custom_exceptions import IllegalCommandError
-from .custom_exceptions import InvalidParameterError
-from .custom_exceptions import BufferOverflowError
-from .custom_exceptions import DeviceMemoryError
-from .custom_exceptions import NotInstalledError
-from .custom_exceptions import CantZeroPressureError
+from prosim8.custom_exceptions import EmptyCommandError
+from prosim8.custom_exceptions import UnknownCommandError
+from prosim8.custom_exceptions import IllegalCommandError
+from prosim8.custom_exceptions import InvalidParameterError
+from prosim8.custom_exceptions import BufferOverflowError
+from prosim8.custom_exceptions import DeviceMemoryError
+from prosim8.custom_exceptions import NotInstalledError
+from prosim8.custom_exceptions import CantZeroPressureError
 
 
 class Connection(object):
